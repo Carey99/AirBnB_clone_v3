@@ -117,7 +117,22 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Testing for A method to retrieve one object"""
+        filestor = FileStorage()
+        new = State()
+        new.name = "Alabama"
+        filestor.new(new)
+        new_id = new.id
+        filestor.save()
+        state = filestor.get("State", new_id)
+        self.assertEqual(state.name, "Alabama")
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """Testing for A method to count the number of objects in storage"""
+        filestor = FileStorage()
+        old_count = filestor.count("State")
+        new = State(name="Alabama")
+        filestor.new(new)
+        filestor.save()
+        new_count = filestor.count("State")
+        self.assertEqual(old_count + 1, new_count)
